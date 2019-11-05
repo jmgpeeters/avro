@@ -102,27 +102,27 @@ set (AVRO_SOURCE_FILES
         impl/Resolver.cc impl/Validator.cc
         )
 
-add_library (avrocpp SHARED ${AVRO_SOURCE_FILES})
+add_library (avro-cpp SHARED ${AVRO_SOURCE_FILES})
 
-set_property (TARGET avrocpp
+set_property (TARGET avro-cpp
     APPEND PROPERTY COMPILE_DEFINITIONS AVRO_DYN_LINK)
 
-add_library (avrocpp_s STATIC ${AVRO_SOURCE_FILES})
+add_library (avro-cpp_s STATIC ${AVRO_SOURCE_FILES})
 
-set_property (TARGET avrocpp avrocpp_s
+set_property (TARGET avro-cpp avro-cpp_s
     APPEND PROPERTY COMPILE_DEFINITIONS AVRO_SOURCE)
 
-set_target_properties (avrocpp PROPERTIES
+set_target_properties (avro-cpp PROPERTIES
     VERSION ${AVRO_VERSION_MAJOR}.${AVRO_VERSION_MINOR})
 
-set_target_properties (avrocpp_s PROPERTIES
+set_target_properties (avro-cpp_s PROPERTIES
     VERSION ${AVRO_VERSION_MAJOR}.${AVRO_VERSION_MINOR})
 
-target_link_libraries (avrocpp ${Boost_LIBRARIES} ${SNAPPY_LIBRARIES})
+target_link_libraries (avro-cpp ${Boost_LIBRARIES} ${SNAPPY_LIBRARIES})
 
 add_executable (precompile test/precompile.cc)
 
-target_link_libraries (precompile avrocpp_s ${Boost_LIBRARIES} ${SNAPPY_LIBRARIES})
+target_link_libraries (precompile avro-cpp_s ${Boost_LIBRARIES} ${SNAPPY_LIBRARIES})
 
 macro (gen file ns)
     add_custom_command (OUTPUT ${file}.hh
@@ -151,13 +151,13 @@ gen (crossref cr)
 gen (primitivetypes pt)
 
 add_executable (avrogencpp impl/avrogencpp.cc)
-target_link_libraries (avrogencpp avrocpp_s ${Boost_LIBRARIES} ${SNAPPY_LIBRARIES})
+target_link_libraries (avrogencpp avro-cpp_s ${Boost_LIBRARIES} ${SNAPPY_LIBRARIES})
 
 enable_testing()
 
 macro (unittest name)
     add_executable (${name} test/${name}.cc)
-    target_link_libraries (${name} avrocpp ${Boost_LIBRARIES} ${SNAPPY_LIBRARIES})
+    target_link_libraries (${name} avro-cpp ${Boost_LIBRARIES} ${SNAPPY_LIBRARIES})
     add_test (NAME ${name} WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
         COMMAND ${CMAKE_CURRENT_BINARY_DIR}/${name})
 endmacro (unittest)
@@ -182,11 +182,11 @@ add_dependencies (AvrogencppTests bigrecord_hh bigrecord_r_hh bigrecord2_hh
 
 include (InstallRequiredSystemLibraries)
 
-set (CPACK_PACKAGE_FILE_NAME "avrocpp-${AVRO_VERSION_MAJOR}")
+set (CPACK_PACKAGE_FILE_NAME "avro-cpp-${AVRO_VERSION_MAJOR}")
 
 include (CPack)
 
-install (TARGETS avrocpp avrocpp_s
+install (TARGETS avro-cpp avro-cpp_s
     LIBRARY DESTINATION lib
     ARCHIVE DESTINATION lib
     RUNTIME DESTINATION lib)
