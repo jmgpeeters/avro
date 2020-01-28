@@ -28,6 +28,7 @@ import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
@@ -117,7 +118,7 @@ public class SpecificCompiler {
   private String outputCharacterEncoding;
   private boolean enableDecimalLogicalType = false;
   private String suffix = ".java";
-  private List<Object> additionalVelocityTools = new ArrayList<>();
+  private List<Object> additionalVelocityTools = Collections.emptyList();
 
   /*
    * Used in the record.vm template.
@@ -329,8 +330,6 @@ public class SpecificCompiler {
       throw new RuntimeException("Unknown type: " + schema);
     }
   }
-
-  private static String logChuteName = null;
 
   private void initializeVelocity() {
     this.velocityEngine = new VelocityEngine();
@@ -646,7 +645,9 @@ public class SpecificCompiler {
     switch (s.getType()) {
     case STRING:
       result = Schema.create(Schema.Type.STRING);
-      GenericData.setStringType(result, stringType);
+      if (s.getLogicalType() == null) {
+        GenericData.setStringType(result, stringType);
+      }
       break;
     case RECORD:
       result = Schema.createRecord(s.getFullName(), s.getDoc(), null, s.isError());
@@ -678,6 +679,9 @@ public class SpecificCompiler {
       break;
     }
     result.addAllProps(s);
+    if (s.getLogicalType() != null) {
+      s.getLogicalType().addToSchema(result);
+    }
     seen.put(s, result);
     return result;
   }
