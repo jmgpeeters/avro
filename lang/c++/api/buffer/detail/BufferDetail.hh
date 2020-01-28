@@ -27,6 +27,7 @@
 #ifdef HAVE_BOOST_ASIO
 #include <boost/asio/buffer.hpp>
 #endif
+#include <iterator>
 #include <exception>
 #include <cassert>
 #include <deque>

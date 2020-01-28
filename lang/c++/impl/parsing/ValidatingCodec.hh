@@ -21,6 +21,7 @@
 
 #include <map>
 #include <vector>
+#include <iterator>
 
 #include "Symbol.hh"
 #include "ValidSchema.hh"

@@ -67,7 +67,8 @@ endif ()
 endif ()
 
 
-find_package (Boost 1.38 REQUIRED
+set(Boost_NO_BOOST_CMAKE ON)
+find_package (Boost 1.70 REQUIRED
     COMPONENTS filesystem iostreams program_options regex system)
 
 find_package(Snappy)
@@ -84,6 +85,7 @@ endif (SNAPPY_FOUND)
 add_definitions (${Boost_LIB_DIAGNOSTIC_DEFINITIONS})
 
 include_directories (api ${CMAKE_CURRENT_BINARY_DIR} ${Boost_INCLUDE_DIRS})
+message("Boost include dirs: ${Boost_INCLUDE_DIRS}")
 
 set (AVRO_SOURCE_FILES
         impl/Compiler.cc impl/Node.cc impl/LogicalType.cc
